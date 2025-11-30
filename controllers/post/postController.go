@@ -112,3 +112,25 @@ func (pc *PostController) Update(c *gin.Context) {
 	}
 
 }
+
+func (pc *PostController) List(c *gin.Context) {
+	var listPostDto dto.ListPostDto
+
+	if err := c.ShouldBindJSON(&listPostDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	posts, err := pc.PostService.List(listPostDto)
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "posts not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "Posts List fetched Successfully!", "data": posts})
+	}
+
+}
