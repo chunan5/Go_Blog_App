@@ -42,13 +42,12 @@ func main() {
 
 	//Posts
 	api.GET("/post/view/:uuid", postController.View)
-
+	api.POST("/post/list", postController.List)
 	api.Use(middlewares.JWTAuthMiddleware())
 	{
 		api.POST("/post/create", postController.Create)
 		api.POST("/post/delete/:uuid", postController.Delete)
 		api.POST("/post/update", postController.Update)
-		api.POST("/post/list", postController.List)
 	}
 
 	r.Run(":6969")
